@@ -1,0 +1,1 @@
+C:\Users\jerem\Documents\developer_directory\rust\the-rust-programming-language\common_programming_concepts\variables\target\debug\variables.exe: C:\Users\jerem\Documents\developer_directory\rust\the-rust-programming-language\common_programming_concepts\variables\src\main.rs
