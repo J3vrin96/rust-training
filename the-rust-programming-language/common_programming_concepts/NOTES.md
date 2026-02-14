@@ -121,3 +121,85 @@ let second = a[1];
 ```
 
 
+## Functions
+- Rust use snak case as naming convention
+- Defining a function by using `fn` before the name of the function `fn main(){}`  
+-
+
+### Parameters
+We can define functions to have parameters, which are special variables that are part of a function’s signature. When a function has parameters, you can provide it with concrete values for those parameters.
+
+**Reminder**
+- Parameter => Defined in the function declaration
+- Argument => Passed to the function
+
+
+In function signatures, you must declare the type of each parameter. This is a deliberate decision in Rust’s design: Requiring type annotations in function definitions means the compiler almost never needs you to use them elsewhere in the code to figure out what type you mean. The compiler is also able to give more-helpful error messages if it knows what types the function expects.
+
+### Statements and Expressions
+Function bodies are made up of a series of statements optionally ending in an expression. So far, the functions we’ve covered haven’t included an ending expression, but you have seen an expression as part of a statement. 
+
+**Rust is an expression-based language.**
+
+
+- Statements are instructions that perform some action and do not return a value.
+- Expressions evaluate to a resultant value.
+
+**Statements**  
+Statements do not return values. Therefore, you can’t assign a let statement to another variable, as the following code tries to do; you’ll get an error:
+
+**Expressions**  
+Expressions evaluate to a value and make up most of the rest of the code that you’ll write in Rust. Consider a math operation, such as 5 + 6, which is an expression that evaluates to the value 11.
+
+
+### Functions with Return Values
+Functions can return values to the code that calls them. We don’t name return values, but we must declare their type after an arrow (->).
+
+
+Adding a semicolon to an expression can throw an error:
+```
+// WORK
+fn plus_one(x: i32) -> i32 {
+    x + 1 // expression
+}
+
+// NOT WORK
+fn plus_one(x: i32) -> i32 {
+    x + 1; // expression => statement
+}
+```
+
+Why ?
+
+Because the semicolon turned the function's expression into a statement and nothing is returned BUT, in the function declaration we've declared thath the returned type is a 32 bit integer.
+
+We can add a semicolon in combination of the `return` keyword because it ensure that the expression stay an expression.
+
+```
+// WORK
+fn plus_one(x: i32) -> i32 {
+    return x + 1 // expression
+}
+
+// WORK
+fn plus_one(x: i32) -> i32 {
+    return x + 1; // expression
+}
+
+```
+
+## Comments
+- Used to explain the code (if necessary)
+- A comment is declare with `//` => `// This is a comment`
+- Can be placed anywhere in the code
+- Is not interpreted by the compiler
+- Combination of multiple comments is allowed => 
+```
+// First comment
+// Second comment
+fn main() {
+    let number: i32 = 5; // This is a number
+}
+```
+
+## Control Flow
