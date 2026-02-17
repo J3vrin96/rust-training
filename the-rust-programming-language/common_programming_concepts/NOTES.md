@@ -203,3 +203,113 @@ fn main() {
 ```
 
 ## Control Flow
+### if Expressions
+An if expression allows you to branch your code depending on conditions. You provide a condition and then state, “If this condition is met, run this block of code.
+
+
+- Blocks of code associated with the conditions in if expressions are sometimes called arms, just like the arms in match expression
+
+### Handling Multiple Condition with else if
+You can use multiple conditions by combining if and else in an else if expression.
+
+### Using if in a let Statement
+Because if is an expression, we can use it on the right side of a let statement to assign the outcome to a variable.
+
+It's not possible to use an inline if statement to assign two differents types like: 
+
+`let number = if condition { 5 } else { "six" };`
+
+The code above doesn't work.
+
+### Repetiting with Loops
+Rust has three kinds of loops: loop, while, and for.
+
+**Repeating Code with loop**  
+The loop keyword tells Rust to execute a block of code over and over again either forever or until you explicitly tell it to stop.
+
+```
+// Infinite loop
+fn main() {
+    loop {
+        println!("again!");
+    }
+}
+```
+
+**Returning Values from Loops**  
+One of the uses of a loop is to retry an operation you know might fail, such as checking whether a thread has completed its job. You might also need to pass the result of that operation out of the loop to the rest of your code.
+
+```
+fn main() {
+    let mut count = 0;
+
+    let result = loop {
+        count += 1;
+
+        println!("{count}");
+
+        if count == 10 {
+            break count * 2;
+        }
+    };
+}
+```
+
+
+**Disambiguating with Loop Labels**  
+ you have loops within loops, break and continue apply to the innermost loop at that point. You can optionally specify a loop label on a loop that you can then use with break or continue to specify that those keywords apply to the labeled loop instead of the innermost loop. Loop labels must begin with a single quote.
+
+ ```
+fn main() {
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+}
+ ```
+**Streamlining Conditional Loops with while**  
+A program will often need to evaluate a condition within a loop. While the condition is true, the loop runs. When the condition ceases to be true, the program calls break, stopping the loop.
+
+```
+fn main() {
+    let mut number = 3;
+
+    while number != 0 {
+        println!("{number}!");
+
+        number -= 1;
+    }
+
+    println!("LIFTOFF!!!");
+}
+```
+
+**Looping Through a Collection with for**  
+Sometimes, it's more safely to use a for loop instead of a while loop for example top loop through a collection.
+
+Here, we use directly the array as iterator reference, when using a while loop we have to define a counter that can lead to a bug.
+
+```
+fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    for element in a {
+        println!("the value is: {element}");
+    }
+}
+```

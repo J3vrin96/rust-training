@@ -1,0 +1,1 @@
+/home/j3vrin96/developer_directory/rust/the-rust-programming-language/common_programming_concepts/temperatures_convertissor/target/debug/temperatures_convertissor: /home/j3vrin96/developer_directory/rust/the-rust-programming-language/common_programming_concepts/temperatures_convertissor/src/main.rs
