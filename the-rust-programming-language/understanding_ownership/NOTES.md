@@ -31,5 +31,105 @@ fn main()     {        // s is not valid here, since it's not yet declared
 - It remains valid until it goes out of scope
 
 
-### The String Type
+### The String Type / Memory and Allocation
+
+With the String type, in order to support a mutable, growable piece of text, we need to allocate an amount of memory on the heap, unknown at compile time, to hold the contents. This means:
+
+The memory must be requested from the memory allocator at runtime.
+We need a way of returning this memory to the allocator when we’re done with our String.  
+That first part is done by us: When we call String::from, its implementation requests the memory it needs. This is pretty much universal in programming languages.
+
+```
+{
+    let s = String::from("hello"); // s is valid from this point forward
+
+    // do stuff with s
+}                                  // this scope is now over, and s is no
+                                   // longer valid
+
+```
+
+
+There is a natural point at which we can return the memory our String needs to the allocator: when s goes out of scope. When a variable goes out of scope, Rust calls a special function for us. This function is called drop, and it’s where the author of String can put the code to return the memory. Rust calls drop automatically at the closing curly bracket.
+
+
+### Variables and Data Interacting with Move
+
+Multiple variables can interact with the same data in different ways in Rust.
+
+```
+    let x = 5;
+    let y = x;
+```
+
+Here, x and y have the same value because integer have a known fixed size and pushed into the **stack**.
+
+## References and Borrowing
+Ampersand sign `&` used before a variable name means that's a reference to the following variable  
+
+Example
+```
+fn main() {
+    let s1 = String::from("hello"); // s1 is a pointer stored in the stack owned the "hello" string that is stored in the heap
+    println!("{s1}");
+
+    let len: usize = calculate_length(&s1); // s is a pointer to a reference of s1 (using ampersand), like that, s1 variable is not dropped after using it.
+    println!("{len}");
+}
+
+fn calculate_length(s: &String) -> usize {
+    return s.len(); 
+}
+```
+
+**Note:** The opposite of referencing by using & is dereferencing, which is accomplished with the dereference operator, *. We’ll see some uses of the dereference operator in Chapter 8 and discuss details of dereferencing in Chapter 15.
+
+### Mutable References
+
+Updating a borrowed value is possible with _mutable reference_.
+
+A mutable reference can be declared like that:
+
+```
+fn main() {
+    let mut s = String::from("hello");
+    update_string(&mut s); // take a mutable reference as argument
+
+    println!("{s}"); // hello my friend
+}
+
+fn update_string(string: &mut String) { // take a mutable reference as parameter
+    string.push_str(" my friend")
+}
+
+```
+
+**Mutable references have one big restriction:** If you have a mutable reference to a value, you can have no other references to that value. This code that attempts to create two mutable references to s will fail.
+
+This restricition prevent _**data race**_.
+
+_**A data race**_ is similar to a race condition and happens when these three behaviors occur:
+
+- Two or more pointers access the same data at the same time.
+- At least one of the pointers is being used to write to the data.
+- There’s no mechanism being used to synchronize access to the data.
+
+As always, we can use curly brackets to create a new scope, allowing for multiple mutable references, just not simultaneous ones:  
+```
+let mut s = String::from("hello");
+
+{
+    let r1 = &mut s;
+} // r1 goes out of scope here, so we can make a new reference with no problems.
+
+let r2 = &mut s;
+
+```
+
+
+
+**Note that a reference’s scope starts from where it is introduced and continues through the last time that reference is used. For instance, this code will compile because the last usage of the immutable references is in the println!, before the mutable reference is introduced**
+
+
+### Dangling References
 

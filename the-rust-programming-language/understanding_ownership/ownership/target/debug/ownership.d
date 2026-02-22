@@ -1,0 +1,1 @@
+/home/j3vrin96/developer_directory/rust/the-rust-programming-language/understanding_ownership/ownership/target/debug/ownership: /home/j3vrin96/developer_directory/rust/the-rust-programming-language/understanding_ownership/ownership/src/main.rs
