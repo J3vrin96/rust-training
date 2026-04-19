@@ -1,1 +1,0 @@
-/home/j3vrin96/developer_directory/rust/rustlings-course/03_if/target/debug/three_if: /home/j3vrin96/developer_directory/rust/rustlings-course/03_if/src/cond/first.rs /home/j3vrin96/developer_directory/rust/rustlings-course/03_if/src/cond/mod.rs /home/j3vrin96/developer_directory/rust/rustlings-course/03_if/src/main.rs
