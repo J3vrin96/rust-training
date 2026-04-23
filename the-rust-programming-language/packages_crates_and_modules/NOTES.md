@@ -66,3 +66,58 @@ maths
 The module tree might remind you of the filesystem’s directory tree on your computer; this is a very apt comparison! Just like directories in a filesystem, you use modules to organize your code. And just like files in a directory, we need a way to find our modules.
 
 ## Paths for Referring to an Item in the Module Tree
+A path can take two forms:
+
+- An absolute path is the full path starting from a crate root; for code from an external crate, the absolute path begins with the crate name, and for code from the current crate, it starts with the literal crate.
+- A relative path starts from the current module and uses self, super, or an identifier in the current module.
+
+Items in a parent module can’t use the private items inside child modules, but items in child modules can use the items in their ancestor modules. This is because child modules wrap and hide their implementation details, but the child modules can see the context in which they’re defined. To continue with our metaphor, think of the privacy rules as being like the back office of a restaurant: What goes on in there is private to restaurant customers, but office managers can see and do everything in the restaurant they operate.
+
+Rust chose to have the module system function this way so that hiding inner implementation details is the default. That way, you know which parts of the inner code you can change without breaking the outer code. However, Rust does give you the option to expose inner parts of child modules’ code to outer ancestor modules by using the pub keyword to make an item public.
+
+### Exposing Paths with the pub Keyword
+Module childs are private by default so if you want to make it public and be able to compie your code, you need to add the `pub` keyword in the function/module's name.  
+```
+mod operations {
+    mod add {
+        // private
+        fn add_integer() {}
+
+        // public
+        pub fn public_add_integer() {}
+    }
+}
+```
+
+### Starting Relative Paths with super
+Using super allows us to reference an item that we know is in the parent module, which can make rearranging the module tree easier when the module is closely related to the parent but the parent might be moved elsewhere in the module tree someday.
+
+Usage:
+```
+fn deliver_order() {}
+
+mod back_of_house {
+    fn fix_incorrect_order() {
+        cook_order();
+        super::deliver_order();
+    }
+
+    fn cook_order() {}
+}
+```
+
+### Making Structs and Enums Public
+We can also use pub to designate structs and enums as public, but there are a few extra details to the usage of pub with structs and enums. If we use pub before a struct definition, we make the struct public, but the struct’s fields will still be private. We can make each field public or not on a case-by-case basis. 
+
+It's also possible to make all fields of en enum public by adding the `pub` keyword in the enum declaration.
+
+```
+pub enum Appetizer {
+    Soup,
+    Salad,
+}
+```
+
+Enums aren’t very useful unless their variants are public; it would be annoying to have to annotate all enum variants with pub in every case, so the default for enum variants is to be public. Structs are often useful without their fields being public, so struct fields follow the general rule of everything being private by default unless annotated with pub.
+
+There’s one more situation involving pub that we haven’t covered, and that is our last module system feature: the use keyword. We’ll cover use by itself first, and then we’ll show how to combine pub and use.
