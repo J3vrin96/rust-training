@@ -121,3 +121,85 @@ pub enum Appetizer {
 Enums aren’t very useful unless their variants are public; it would be annoying to have to annotate all enum variants with pub in every case, so the default for enum variants is to be public. Structs are often useful without their fields being public, so struct fields follow the general rule of everything being private by default unless annotated with pub.
 
 There’s one more situation involving pub that we haven’t covered, and that is our last module system feature: the use keyword. We’ll cover use by itself first, and then we’ll show how to combine pub and use.
+
+## Bringing Paths into Scope with the use Keyword
+Adding `use` and a path in a scope is similar to creating a symbolic link in the filesystem. By adding `use` in the crate root, the module is now a valid in that scope, just as though the module had been defined in the crate root. Paths brought into scope with use also check privacy, like any other paths.
+
+Note that use only creates the shortcut for the particular scope in which the `use` occurs. Moves a function into a new child module named differently, which is then a different scope than the use statement, so the function body won’t compile.
+
+### Creating Idiomatic use Paths
+Using two items with the same name but from different modules can be confusing:
+```
+Filename: src/lib.rs
+use std::fmt;
+use std::io;
+
+fn function1() -> fmt::Result {
+    // --snip--
+}
+
+fn function2() -> io::Result<()> {
+    // --snip--
+}
+```
+
+As you can see, using the parent modules distinguishes the two Result types. If instead we specified use std::fmt::Result and use std::io::Result, we’d have two Result types in the same scope, and Rust wouldn’t know which one we meant when we used Result.
+
+### Providing New Names with the as Keyword
+There’s another solution to the problem of bringing two types of the same name into the same scope with use: After the path, we can specify as and a new local name, or alias, for the type.
+```
+use std::fmt::Result;
+use std::io::Result as IoResult;
+```
+
+### Re-exporting Names with pub use
+When we bring a name into scope with the use keyword, the name is private to the scope into which we imported it. To enable code outside that scope to refer to that name as if it had been defined in that scope, we can combine pub and use. This technique is called re-exporting because we’re bringing an item into scope but also making that item available for others to bring into their scope.
+
+### Using External Packages
+To use an exeternal crate in our project, we need to add it to the _Cargo.toml_ file then use this package by including it by using the `use` keyword.
+
+### Using Nested Paths to Clean Up use Lists
+ We can use nested paths to bring the same items into scope in one line. We do this by specifying the common part of the path, followed by two colons, and then curly brackets around a list of the parts of the paths that differ.  
+
+ __These lines:__
+
+ ```
+// --snip--
+use std::cmp::Ordering;
+use std::io;
+// --snip--
+
+ ```
+
+ __Can be:__
+ ```
+// --snip--
+use std::{cmp::Ordering, io};
+// --snip--
+ ```
+
+Also, if we need to import the crate and then a scpeific function/module from the same crate, we need to call `self` then the function/module.  
+
+__These lines:__
+```
+use std::io;
+use std::io::Write;
+```
+
+__Can be:__
+```
+use std::io::{self, Write};
+```
+
+### Importing Items with the Glob Operator
+If we want to bring all public items defined in a path into scope, we can specify that path followed by the * glob operator:
+
+```
+use std::collections::*;
+```
+
+This use statement brings all public items defined in std::collections into the current scope. Be careful when using the glob operator! Glob can make it harder to tell what names are in scope and where a name used in your program was defined. Additionally, if the dependency changes its definitions, what you’ve imported changes as well, which may lead to compiler errors when you upgrade the dependency if the dependency adds a definition with the same name as a definition of yours in the same scope, for example.
+
+## Separating Modules into Different Files
+
+`mod` is not an “include” operation that you may have seen in other programming languages.
