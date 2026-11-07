@@ -3,6 +3,6 @@ pub fn add(a: u32, b: u32) -> u32 {
 }
 
 #[test]
-fn sould_add() {
+fn should_add() {
   assert_eq!(add(2, 4), 6)
 }
